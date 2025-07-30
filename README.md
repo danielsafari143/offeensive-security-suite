@@ -51,8 +51,9 @@ This project is an **Educational Offensive Security Suite** designed to provide 
 
 1. Clone the repository.
 2. Install dependencies from `requirements.txt` (recommended in a virtual environment).
-3. Use the provided CLI tools and modules to practice offensive security techniques in a controlled and authorized environment.
-4. Refer to the included documentation and comments for guidance.
+3. **It is strongly recommended to run this suite on Kali Linux or similar penetration testing Linux distributions** where all dependencies and tools (like Nmap, Nikto, WhatWeb) are readily available.
+4. Use the provided CLI tools and modules to practice offensive security techniques in a controlled and authorized environment.
+5. Refer to the included documentation and comments for guidance.
 
 ---
 
