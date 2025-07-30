@@ -14,12 +14,9 @@ DROP TABLE IF EXISTS user;
 
 -- Users
 CREATE TABLE user (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT NOT NULL UNIQUE,
-    email TEXT NOT NULL UNIQUE,
-    password TEXT NOT NULL,
-    is_active BOOLEAN DEFAULT 1,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username TEXT UNIQUE NOT NULL,
+  password TEXT NOT NULL
 );
 
 -- Roles (Admin, Analyst, etc.)
@@ -132,4 +129,13 @@ CREATE TABLE audit_log (
     details TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE SET NULL
+);
+
+CREATE TABLE history (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    timestamp TEXT NOT NULL,
+    command TEXT NOT NULL,
+    result TEXT,
+    FOREIGN KEY (user_id) REFERENCES user(id)
 );

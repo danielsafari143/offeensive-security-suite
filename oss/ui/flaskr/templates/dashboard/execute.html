@@ -1,0 +1,39 @@
+<!doctype html>
+<title>{% block title %}Exécuter une commande - Flaskr{% endblock %} - Flaskr</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<nav>
+    <h1>Flaskr</h1>
+    <ul>
+        {% if g.user %}
+        <li><span>{{ g.user['username'] }}</span></li>
+        <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
+        {% else %}
+        <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+        <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
+        {% endif %}
+    </ul>
+</nav>
+<section class="content">
+    <header>
+        {% block header %}
+        <h2>Exécution de commandes système</h2>
+        {% endblock %}
+    </header>
+
+    {% for message in get_flashed_messages() %}
+    <div class="flash">{{ message }}</div>
+    {% endfor %}
+
+    {% block content %}
+    <form method="POST" action="{{ url_for('dashboard.execute') }}">
+        <label for="command">Commande à exécuter :</label><br>
+        <input type="text" id="command" name="command" required size="60" autofocus><br><br>
+        <button type="submit">Exécuter</button>
+    </form>
+
+    {% if output %}
+    <h3>Résultat :</h3>
+    <pre style="background:#f0f0f0; padding:10px; border:1px solid #ccc;">{{ output }}</pre>
+    {% endif %}
+    {% endblock %}
+</section>

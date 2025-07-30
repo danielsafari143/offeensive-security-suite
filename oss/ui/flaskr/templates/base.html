@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>{% block title %}Flaskr{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  {% block nav %}{% endblock %}  <!-- Ici on affiche le menu -->
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>
