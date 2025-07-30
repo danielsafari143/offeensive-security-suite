@@ -35,6 +35,38 @@ This project is an **Educational Offensive Security Suite** designed to provide 
 
 ---
 
+## Command-Line Interface (CLI) Commands
+
+### Recon Shell Commands
+
+| Command                 | Description                                                     | Example                            |
+|-------------------------|-----------------------------------------------------------------|----------------------------------|
+| `discover <subnet>`     | Discover live hosts in a subnet (ICMP ping scan)                | `discover 192.168.1.0/24`        |
+| `scan <host> ports=...` | Scan specified TCP ports on a host                              | `scan 192.168.1.10 ports=22,80`  |
+| `banner <host> <port>`  | Grab service banner from a host and port                        | `banner 192.168.1.10 80`          |
+| `dns <domain>`          | Perform DNS A record lookup                                     | `dns example.com`                 |
+| `whois <domain>`        | Perform WHOIS lookup                                           | `whois example.com`               |
+| `detect <url>`          | Fingerprint web technologies using WhatWeb                    | `detect example.com`              |
+| `vuln <url>`            | Run stealthy web vulnerability scan using Nikto               | `vuln example.com`                |
+| `soft <host>`           | Detect installed software/services with Nmap & Kali tools      | `soft 192.168.1.10`               |
+| `history`               | Show command history                                           | `history`                        |
+| `help`                  | Show help message                                             | `help`                          |
+| `exit`                  | Exit the recon shell                                          | `exit`                          |
+
+### Reverse Shell Module Commands (Inside Interactive Shell)
+
+| Command           | Description                                      |
+|-------------------|------------------------------------------------|
+| `upload <file>`   | Upload a local file to the remote client         |
+| `download <file>` | Download a file from the remote client            |
+| `snapshot`       | Receive a snapshot image from the client          |
+| `screenshot`     | Receive a screenshot image from the client        |
+| `stream`         | Start live video streaming from the client        |
+| `exit`           | Terminate the reverse shell session                |
+| *Any shell command* | Executes on the remote machine                     |
+
+---
+
 ## Important Disclaimer
 
 **This project is strictly for educational and research purposes only.**
