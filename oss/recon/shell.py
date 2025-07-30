@@ -3,24 +3,35 @@ from recon import scanner
 
 HISTORY = []
 
+def print_banner():
+    print("\033[96m" + r"""
+    ██████╗ ███████╗ ██████╗ ██████╗  ██████╗ ███╗   ██╗
+    ██╔══██╗██╔════╝██╔════╝ ██╔══██╗██╔═══██╗████╗  ██║
+    ██████╔╝█████╗  ██║  ███╗██████╔╝██║   ██║██╔██╗ ██║
+    ██╔═══╝ ██╔══╝  ██║   ██║██╔═══╝ ██║   ██║██║╚██╗██║
+    ██║     ███████╗╚██████╔╝██║     ╚██████╔╝██║ ╚████║
+    ╚═╝     ╚══════╝ ╚═════╝ ╚═╝      ╚═════╝ ╚═╝  ╚═══╝
+    Recon Shell - Offensive Recon Toolkit (Educational Use Only)
+    \033[0m""")
+
 def print_help():
     print("""
 Commands:
-  discover <subnet>                 - Discover live hosts in a subnet (e.g., discover 192.168.1.0/24)
-  scan <host> ports=22,80          - Scan specific ports on a host (e.g., scan 192.168.1.1 ports=22,80)
-  banner <host> <port>             - Grab banner from a service (e.g., banner 192.168.1.1 80)
+  discover <subnet>                - Discover live hosts in a subnet (e.g., discover 192.168.1.0/24)
+  scan <host> ports=22,80         - Scan specific ports on a host (e.g., scan 192.168.1.1 ports=22,80)
+  banner <host> <port>            - Grab banner from a service (e.g., banner 192.168.1.1 80)
   dns <domain>                    - Perform DNS A record lookup (e.g., dns example.com)
   whois <domain>                  - Perform WHOIS lookup (e.g., whois example.com)
-  detect <url>                   - Fingerprint web technologies on the given URL (e.g., detect example.com)
-  vuln <url>                     - Run stealthy web vulnerability scan using Nikto (e.g., vuln example.com)
-  soft <host>                    - Detect installed software on host using Nmap & tools (e.g., soft 192.168.1.1)
-  history                        - Show command history
-  help                           - Show this help message
-  exit                           - Exit the shell
+  detect <url>                    - Fingerprint web technologies on the given URL (e.g., detect example.com)
+  vuln <url>                      - Run stealthy web vulnerability scan using Nikto (e.g., vuln example.com)
+  soft <host>                     - Detect installed software on host using Nmap (e.g., soft 192.168.1.1)
+  history                         - Show command history
+  help                            - Show this help message
+  exit                            - Exit the shell
 """)
 
 def main():
-    print("[+] Welcome to the Recon Shell (educational use only)")
+    print_banner()
     print_help()
 
     while True:
